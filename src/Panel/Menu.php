@@ -4,7 +4,9 @@ namespace Kirby\Panel;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 /**
  * The Menu class takes care of gathering
@@ -26,13 +28,8 @@ class Menu
 	) {
 	}
 
-	/**
-	 * Returns all areas that are configured for the menu
-	 * @internal
-	 */
 	public function areas(): array
 	{
-		// get from config option which areas should be listed in the menu
 		$kirby = App::instance();
 		$areas = $kirby->option('panel.menu');
 
@@ -40,51 +37,67 @@ class Menu
 			$areas = $areas($kirby);
 		}
 
-		// if no config is defined…
-		if ($areas === null) {
-			// ensure that some defaults are on top in the right order
-			$defaults    = ['site', 'languages', 'users', 'system'];
-			// add all other areas after that
-			$additionals = array_diff(array_keys($this->areas), $defaults);
-			$areas       = array_merge($defaults, $additionals);
-		}
+		return match ($areas) {
+			null    => $this->defaultAreas(),
+			default => $this->customEntries($areas)
+		};
+	}
 
-		$result = [];
+	protected function customEntries(array $config): array
+	{
+		$entries = [];
 
-		foreach ($areas as $id => $area) {
-			// separator, keep as is in array
-			if ($area === '-') {
-				$result[] = '-';
+		foreach ($config as $id => $entry) {
+			// keep separator as
+			if ($entry === '-') {
+				$entries[] = '-';
 				continue;
 			}
 
 			// for a simple id, get global area definition
 			if (is_numeric($id) === true) {
-				$id   = $area;
-				$area = $this->areas[$id] ?? null;
+				$id    = $entry;
+				$entry = $this->areas[$id] ?? null;
+			} else {
+				// add default current callback for
+				// custom entries that define a link
+				if ($link = $entry['link'] ?? null) {
+					$entry['current'] ??= function (string $current) use ($link): bool {
+						$path = App::instance()->request()->path()->toString();
+						return Str::contains($path, $link);
+					};
+				}
 			}
 
-			// did not receive custom entry definition in config,
-			// but also is not a global area
-			if ($area === null) {
+			// skip non-existing areas
+			if (is_array($entry) === false) {
 				continue;
 			}
 
-			// merge area definition (e.g. from config)
-			// with global area definition
-			if (is_array($area) === true) {
-				$area = array_merge(
-					$this->areas[$id] ?? [],
-					['menu' => true],
-					$area
-				);
-				$area = Panel::area($id, $area);
-			}
+			// merge definition  with global area definition
+			$entry = array_merge(
+				$this->areas[$id] ?? [],
+				['menu' => true],
+				$entry
+			);
 
-			$result[] = $area;
+			$entries[] = Panel::area($id, $entry);
 		}
 
-		return $result;
+		return $entries;
+	}
+
+	protected function defaultAreas(): array
+	{
+		// ensure that some defaults are on top in the right order
+		$defaults    = ['site', 'languages', 'users', 'system'];
+		// add all other areas after that
+		$additionals = array_diff(array_keys($this->areas), $defaults);
+
+		return A::map(
+			[...$defaults, ...$additionals],
+			fn ($area) => $this->areas[$area]
+		);
 	}
 
 	/**
