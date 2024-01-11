@@ -14,6 +14,7 @@ import ResetPasswordView from "./Login/ResetPasswordView.vue";
 import UserInfo from "./Login/UserInfo.vue";
 
 import PageView from "./Pages/PageView.vue";
+import PreviewView from "./Pages/PreviewView.vue";
 import SiteView from "./Pages/SiteView.vue";
 
 import SystemView from "./System/SystemView.vue";
@@ -45,6 +46,7 @@ export default {
 		app.component("k-user-info", UserInfo);
 
 		app.component("k-page-view", PageView);
+		app.component("k-preview-view", PreviewView);
 		app.component("k-site-view", SiteView);
 
 		app.component("k-system-view", SystemView);

@@ -8,6 +8,15 @@ return [
 		'pattern' => 'pages/(:any)',
 		'action'  => fn (string $path) => Find::page($path)->panel()->view()
 	],
+	'page.preview' => [
+		'pattern' => 'pages/(:any)/preview',
+		'action'  => function (string $path) {
+			return [
+				...Find::page($path)->panel()->view(),
+				'component' => 'k-preview-view'
+			];
+		}
+	],
 	'page.file' => [
 		'pattern' => 'pages/(:any)/files/(:any)',
 		'action'  => function (string $id, string $filename) {
