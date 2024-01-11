@@ -18,17 +18,33 @@
 			{{ model.title }}
 			<template #buttons>
 				<k-button-group>
-					<k-button
-						v-if="permissions.preview && model.previewUrl"
-						:link="model.previewUrl"
-						:title="$t('open')"
-						icon="open"
-						target="_blank"
-						variant="filled"
-						size="sm"
-						class="k-page-view-preview"
-					/>
-
+					<template v-if="permissions.preview && model.previewUrl">
+						<k-button
+							:title="$t('open')"
+							icon="open"
+							variant="filled"
+							size="sm"
+							class="k-page-view-preview"
+							@click="$refs.preview.toggle()"
+						/>
+						<k-dropdown-content ref="preview" align-x="end">
+							<k-dropdown-item
+								:link="model.previewUrl"
+								icon="open"
+								target="_blank"
+							>
+								Open in a new tab
+							</k-dropdown-item>
+							<k-dropdown-item
+								icon="edit"
+								@click="$panel.view.open(model.link + '/preview')"
+							>
+								Open preview mode
+							</k-dropdown-item>
+							<hr />
+							<k-dropdown-item icon="copy"> Copy URL </k-dropdown-item>
+						</k-dropdown-content>
+					</template>
 					<k-button
 						:disabled="isLocked === true"
 						:dropdown="true"

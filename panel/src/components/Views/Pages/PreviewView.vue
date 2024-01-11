@@ -1,11 +1,18 @@
 <template>
 	<k-panel class="k-preview-view">
 		<div class="k-preview-toolbar">
-			<h1>
-				<k-button icon="title" @click="$dialog(id + '/changeTitle')">
-					{{ model.title }}
-				</k-button>
-			</h1>
+			<k-button-group>
+				<k-button :link="id" icon="angle-left" size="sm" variant="filled" />
+				<h1>
+					<k-button
+						:dropdown="true"
+						icon="title"
+						@click="$dialog(id + '/changeTitle')"
+					>
+						{{ model.title }}
+					</k-button>
+				</h1>
+			</k-button-group>
 			<k-button-group>
 				<k-button
 					v-if="permissions.preview && model.previewUrl"
@@ -50,7 +57,7 @@
 
 		<div class="k-preview-window">
 			<div class="k-preview-window-frame">
-				<iframe ref="iframe" :src="model.previewUrl"></iframe>
+				<iframe ref="iframe" :src="model.previewUrl" @load="load"></iframe>
 			</div>
 		</div>
 
@@ -82,11 +89,24 @@ import PageView from "./PageView.vue";
 
 export default {
 	extends: PageView,
+	data() {
+		return {
+			isReloading: false
+		};
+	},
 	created() {
 		this.$events.on("model.update", this.reload);
+		this.$events.on("page.changeTitle", this.reload);
+		this.$events.on("page.changeStatus", this.reload);
+		this.$events.on("page.sort", this.reload);
+		this.$events.on("file.sort", this.reload);
 	},
 	destroyed() {
 		this.$events.off("model.update", this.reload);
+		this.$events.off("page.changeTitle", this.reload);
+		this.$events.off("page.changeStatus", this.reload);
+		this.$events.off("page.sort", this.reload);
+		this.$events.off("file.sort", this.reload);
 	},
 	computed: {
 		notification() {
@@ -103,13 +123,23 @@ export default {
 			return this.$view.timestamp;
 		}
 	},
-	watch: {
-		timestamp() {
-			this.reload();
-		}
-	},
 	methods: {
+		load(event) {
+			const location = event.target.contentDocument.location;
+
+			if (location.href !== this.model.previewUrl) {
+				const url = this.$api.pages.url(location.pathname.replace("/", ""));
+				this.$panel.view.open(url + "/preview");
+			}
+
+			this.isReloading = false;
+		},
 		reload() {
+			if (this.isReloading === true) {
+				return;
+			}
+
+			this.isReloading = true;
 			this.$refs.iframe.contentWindow.location.reload();
 		}
 	}
@@ -123,7 +153,7 @@ export default {
 		"toolbar toolbar"
 		"window editor";
 	grid-template-columns: 2fr 1fr;
-	grid-template-rows: var(--height-xl) auto;
+	grid-template-rows: var(--height-xl) 1fr;
 	height: 100vh;
 }
 
@@ -164,5 +194,6 @@ export default {
 	grid-area: editor;
 	overflow: scroll;
 	padding: var(--spacing-12);
+	border-left: 1px solid var(--color-border);
 }
 </style>
