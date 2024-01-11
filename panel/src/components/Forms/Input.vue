@@ -14,7 +14,7 @@
 					ref="input"
 					v-bind="inputProps"
 					:value="value"
-					v-on="$listeners"
+					@input="$emit('input', $event)"
 				/>
 			</slot>
 		</span>
@@ -51,7 +51,8 @@ export const props = {
 			type: [String, Boolean, Number, Object, Array],
 			default: null
 		}
-	}
+	},
+	emits: ["input", "invalid"]
 };
 
 export default {

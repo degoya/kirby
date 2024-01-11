@@ -190,6 +190,7 @@ export default {
 		 */
 		sortable: Boolean
 	},
+	emits: ["cell", "change", "header", "input", "option", "paginate", "sort"],
 	data() {
 		return {
 			values: this.rows
@@ -398,7 +399,7 @@ export default {
 	color: var(--table-color-th-text);
 	background: var(--table-color-th-back);
 }
-.k-table th[data-has-button] {
+.k-table th[data-has-button="true"] {
 	padding: 0;
 }
 .k-table th button {

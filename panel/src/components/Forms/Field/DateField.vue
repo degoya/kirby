@@ -1,19 +1,10 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-date-field">
+	<k-field v-bind="$props" :input="id" class="k-date-field">
 		<div ref="body" :data-has-time="Boolean(time)" class="k-date-field-body">
 			<!-- Date input -->
 			<k-input
-				:id="_uid"
 				ref="dateInput"
 				v-bind="$props"
-				:autofocus="autofocus"
-				:disabled="disabled"
-				:display="display"
-				:max="max"
-				:min="min"
-				:required="required"
-				:value="value"
-				theme="field"
 				type="date"
 				@input="onDateInput"
 				@submit="$emit('submit')"
@@ -47,7 +38,6 @@
 				:step="time.step"
 				:value="iso.time"
 				:icon="time.icon"
-				theme="field"
 				type="time"
 				@input="onTimeInput"
 				@submit="$emit('submit')"
@@ -124,6 +114,7 @@ export default {
 			default: true
 		}
 	},
+	emits: ["input", "submit"],
 	data() {
 		return {
 			// keep an object of separate ISO values

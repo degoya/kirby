@@ -1,6 +1,9 @@
 <template>
 	<k-dialog
-		v-bind="$props"
+		:cancel-button="false"
+		:size="size"
+		:submit-button="false"
+		:visible="true"
 		class="k-block-selector"
 		@cancel="$emit('cancel')"
 		@submit="$emit('submit', value)"
@@ -38,20 +41,11 @@
 </template>
 
 <script>
-import Dialog from "@/mixins/dialog.js";
-
 export default {
-	mixins: [Dialog],
 	inheritAttrs: false,
 	props: {
-		// eslint-disable-next-line vue/require-prop-types
-		cancelButton: {
-			default: false
-		},
 		disabledFieldsets: {
-			default() {
-				return [];
-			},
+			default: () => [],
 			type: Array
 		},
 		fieldsets: {
@@ -63,19 +57,16 @@ export default {
 		headline: {
 			type: String
 		},
-		// eslint-disable-next-line vue/require-prop-types
 		size: {
+			type: String,
 			default: "medium"
-		},
-		// eslint-disable-next-line vue/require-prop-types
-		submitButton: {
-			default: false
 		},
 		value: {
 			default: null,
 			type: String
 		}
 	},
+	emits: ["cancel", "input", "paste", "submit"],
 	data() {
 		return {
 			selected: null
@@ -172,7 +163,7 @@ export default {
 	gap: 1rem;
 	box-shadow: var(--shadow);
 }
-.k-block-types .k-button[aria-disabled] {
+.k-block-types .k-button[aria-disabled="true"] {
 	opacity: var(--opacity-disabled);
 	--button-color-back: var(--color-gray-200);
 	box-shadow: none;

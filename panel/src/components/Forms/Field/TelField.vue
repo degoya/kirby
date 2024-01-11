@@ -1,12 +1,10 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-tel-field">
+	<k-field v-bind="$props" :input="id" class="k-tel-field">
 		<k-input
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
-			theme="field"
 			type="tel"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		/>
 	</k-field>
 </template>

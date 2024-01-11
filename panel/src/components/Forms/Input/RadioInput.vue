@@ -39,7 +39,6 @@ export default {
 					autofocus: this.autofocus && index === 0,
 					checked: this.value === option.value,
 					disabled: this.disabled || option.disabled,
-					icon: option.icon,
 					id: `${this.id}-${index}`,
 					info: option.info,
 					label: option.text,

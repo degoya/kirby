@@ -69,6 +69,7 @@ export default {
 			type: Number
 		}
 	},
+	emits: ["close", "open", "select", "toggle"],
 	data() {
 		return {
 			state: this.items
@@ -130,12 +131,12 @@ export default {
 	background: var(--tree-color-back);
 }
 .k-tree-branch:hover,
-li[aria-current] > .k-tree-branch {
+li[aria-current="true"] > .k-tree-branch {
 	--tree-color-text: var(--tree-color-selected-text);
 	background: var(--tree-color-hover-back);
 	border-radius: var(--rounded);
 }
-li[aria-current] > .k-tree-branch {
+li[aria-current="true"] > .k-tree-branch {
 	background: var(--tree-color-selected-back);
 }
 .k-tree-toggle {

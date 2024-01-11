@@ -59,7 +59,7 @@ export default {
 			default: () => ({})
 		}
 	},
-	emits: ["input", "submit"],
+	emits: ["focus", "input", "submit"],
 	data() {
 		return {
 			errors: {}

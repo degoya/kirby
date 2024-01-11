@@ -1,12 +1,10 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-url-field">
+	<k-field v-bind="$props" :input="id" class="k-url-field">
 		<k-input
 			v-bind="$props"
-			:id="_uid"
 			ref="input"
-			theme="field"
 			type="url"
-			v-on="$listeners"
+			@input="$emit('input', $event)"
 		>
 			<template #icon>
 				<k-button

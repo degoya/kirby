@@ -1,6 +1,6 @@
 <template>
-	<k-field v-bind="$props" :input="_uid" class="k-link-field">
-		<k-input v-bind="$props" :icon="false" theme="field">
+	<k-field v-bind="$props" :input="id" class="k-link-field">
+		<k-input v-bind="$props" :icon="false">
 			<k-array-input
 				v-bind="{
 					name,
@@ -50,7 +50,7 @@
 				<component
 					:is="'k-' + currentType.input + '-input'"
 					v-else
-					:id="_uid"
+					:id="id"
 					ref="input"
 					:required="required"
 					:disabled="disabled"
