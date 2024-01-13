@@ -141,7 +141,11 @@ export default {
 	},
 	methods: {
 		load(event) {
-			const location = event.target.contentDocument.location;
+			const location = event.target.contentDocument?.location;
+
+			if (!location) {
+				return;
+			}
 
 			if (location.href !== this.model.previewUrl) {
 				const path = location.pathname.replace("/", "");
