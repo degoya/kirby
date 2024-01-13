@@ -144,8 +144,14 @@ export default {
 			const location = event.target.contentDocument.location;
 
 			if (location.href !== this.model.previewUrl) {
-				const url = this.$api.pages.url(location.pathname.replace("/", ""));
-				this.$panel.view.open(url + "/preview");
+				const path = location.pathname.replace("/", "");
+
+				if (path === "") {
+					return this.$panel.view.open("site/preview");
+				}
+
+				const url = this.$api.pages.url(path, "preview");
+				this.$panel.view.open(url);
 			}
 
 			this.isReloading = false;

@@ -27,6 +27,15 @@ return [
 		'pattern' => 'site',
 		'action'  => fn () => App::instance()->site()->panel()->view()
 	],
+	'site.preview' => [
+		'pattern' => 'site/preview',
+		'action'  => function () {
+			return [
+				...App::instance()->site()->panel()->view(),
+				'component' => 'k-preview-view'
+			];
+		}
+	],
 	'site.file' => [
 		'pattern' => 'site/files/(:any)',
 		'action'  => function (string $filename) {
