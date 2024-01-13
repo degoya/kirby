@@ -1,5 +1,10 @@
 <template>
-	<k-panel class="k-preview-view">
+	<k-panel
+		class="k-preview-view"
+		:style="{
+			'--preview-window-width': 'var(--preview-window-width-' + size + ')'
+		}"
+	>
 		<div class="k-preview-toolbar">
 			<k-button-group>
 				<k-button :link="id" icon="angle-left" size="sm" variant="filled" />
@@ -13,6 +18,16 @@
 					</k-button>
 				</h1>
 			</k-button-group>
+			<k-toggles-input
+				:options="[
+					{ icon: 'mobile', value: 'sm' },
+					{ icon: 'tablet', value: 'md' },
+					{ icon: 'display', value: 'lg' }
+				]"
+				:value="size"
+				class="k-preview-sizes"
+				@input="size = $event"
+			/>
 			<k-button-group>
 				<k-button
 					v-if="permissions.preview && model.previewUrl"
@@ -91,22 +106,9 @@ export default {
 	extends: PageView,
 	data() {
 		return {
-			isReloading: false
+			isReloading: false,
+			size: "lg"
 		};
-	},
-	created() {
-		this.$events.on("model.update", this.reload);
-		this.$events.on("page.changeTitle", this.reload);
-		this.$events.on("page.changeStatus", this.reload);
-		this.$events.on("page.sort", this.reload);
-		this.$events.on("file.sort", this.reload);
-	},
-	destroyed() {
-		this.$events.off("model.update", this.reload);
-		this.$events.off("page.changeTitle", this.reload);
-		this.$events.off("page.changeStatus", this.reload);
-		this.$events.off("page.sort", this.reload);
-		this.$events.off("file.sort", this.reload);
 	},
 	computed: {
 		notification() {
@@ -122,6 +124,20 @@ export default {
 		timestamp() {
 			return this.$view.timestamp;
 		}
+	},
+	created() {
+		this.$events.on("model.update", this.reload);
+		this.$events.on("page.changeTitle", this.reload);
+		this.$events.on("page.changeStatus", this.reload);
+		this.$events.on("page.sort", this.reload);
+		this.$events.on("file.sort", this.reload);
+	},
+	destroyed() {
+		this.$events.off("model.update", this.reload);
+		this.$events.off("page.changeTitle", this.reload);
+		this.$events.off("page.changeStatus", this.reload);
+		this.$events.off("page.sort", this.reload);
+		this.$events.off("file.sort", this.reload);
 	},
 	methods: {
 		load(event) {
@@ -148,11 +164,15 @@ export default {
 
 <style>
 .k-preview-view {
+	--preview-window-width-sm: calc(420px + var(--spacing-12) * 2) 1fr;
+	--preview-window-width-md: calc(768px + var(--spacing-12) * 2) 1fr;
+	--preview-window-width-lg: 1fr 30rem;
+
 	display: grid;
 	grid-template-areas:
 		"toolbar toolbar"
 		"window editor";
-	grid-template-columns: 2fr 1fr;
+	grid-template-columns: var(--preview-window-width);
 	grid-template-rows: var(--height-xl) 1fr;
 	height: 100vh;
 }
@@ -169,6 +189,14 @@ export default {
 }
 .k-preview-toolbar h1 {
 	font-weight: var(--font-bold);
+}
+
+.k-preview-sizes {
+	--field-input-height: var(--height-sm);
+	background: transparent;
+}
+.k-preview-sizes label {
+	background: var(--color-gray-300);
 }
 
 .k-preview-window {
