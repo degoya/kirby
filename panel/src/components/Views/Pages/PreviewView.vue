@@ -173,7 +173,7 @@ export default {
 
 .k-preview-window {
 	grid-area: window;
-	padding: var(--spacing-12);
+	padding: var(--spacing-12) var(--spacing-12) 0;
 }
 .k-preview-window-frame {
 	height: 100%;
