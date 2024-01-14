@@ -35,10 +35,7 @@
 							>
 								Open in a new tab
 							</k-dropdown-item>
-							<k-dropdown-item
-								icon="edit"
-								@click="$panel.view.open(model.link + '/preview')"
-							>
+							<k-dropdown-item icon="edit" @click="$panel.view.preview = true">
 								Open preview mode
 							</k-dropdown-item>
 							<hr />

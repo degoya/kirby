@@ -39,9 +39,18 @@ export default {
 		this.$panel.events.unsubscribe();
 	},
 	render(h) {
-		if (this.$panel.view.component) {
-			return h(this.$panel.view.component, {
-				key: this.$panel.view.component,
+		let view = this.$panel.view.component;
+
+		if (view) {
+			// TODO: this is a hack to make the preview work
+			if (this.$panel.view.preview) {
+				if (view === "k-page-view" || view === "k-site-view") {
+					view = "k-preview-view";
+				}
+			}
+
+			return h(view, {
+				key: view,
 				props: this.$panel.view.props
 			});
 		}

@@ -7,7 +7,12 @@
 	>
 		<div class="k-preview-toolbar">
 			<k-button-group>
-				<k-button :link="id" icon="angle-left" size="sm" variant="filled" />
+				<k-button
+					icon="angle-left"
+					size="sm"
+					variant="filled"
+					@click="$panel.view.preview = false"
+				/>
 				<h1>
 					<k-button
 						:dropdown="true"
@@ -19,7 +24,7 @@
 					</k-button>
 				</h1>
 				<k-dropdown-content ref="tree" theme="light" class="k-preview-tree">
-					<k-page-tree @click.native.stop @select="navigate" />
+					<k-page-tree @click.native.stop @select="navigate($event.id)" />
 				</k-dropdown-content>
 			</k-button-group>
 			<k-toggles-input
@@ -133,26 +138,19 @@ export default {
 			}
 
 			if (location.href !== this.model.previewUrl) {
-				const path = location.pathname.replace("/", "");
-
-				if (path === "") {
-					return this.$panel.view.open("site/preview");
-				}
-
-				const url = this.$api.pages.url(path, "preview");
-				this.$panel.view.open(url);
+				this.navigate(location.pathname);
 			}
 
 			this.isReloading = false;
 		},
-		navigate(page) {
+		navigate(path) {
 			this.$refs.tree.close();
 
-			if (page.id === "/") {
-				return this.$panel.view.open("site/preview");
+			if (path === "/") {
+				return this.$panel.view.open("site");
 			}
 
-			const url = this.$api.pages.url(page.id, "preview");
+			const url = this.$api.pages.url(path);
 			this.$panel.view.open(url);
 		},
 		reload() {

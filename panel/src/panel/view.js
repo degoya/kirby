@@ -49,6 +49,17 @@ export default (panel) => {
 			}
 		},
 
+		get preview() {
+			return sessionStorage.getItem("kirby.panel.view.mode") === "preview";
+		},
+		set preview(state) {
+			if (state === true) {
+				sessionStorage.setItem("kirby.panel.view.mode", "preview");
+			} else {
+				sessionStorage.removeItem("kirby.panel.view.mode");
+			}
+		},
+
 		/**
 		 * Submitting view form values is not
 		 * implemented yet

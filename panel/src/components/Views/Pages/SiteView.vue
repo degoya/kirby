@@ -1,46 +1,50 @@
 <template>
-	<k-panel-inside
-		:data-has-tabs="tabs.length > 1"
-		:data-locked="isLocked"
-		data-id="/"
-		data-template="site"
-		class="k-site-view"
-	>
-		<k-header
-			:editable="permissions.changeTitle && !isLocked"
-			class="k-site-view-header"
-			@edit="$dialog('site/changeTitle')"
+	<div>
+		<k-preview-view v-if="$panel.view.preview" v-bind="$props" />
+		<k-panel-inside
+			v-else
+			:data-has-tabs="tabs.length > 1"
+			:data-locked="isLocked"
+			data-id="/"
+			data-template="site"
+			class="k-site-view"
 		>
-			{{ model.title }}
-			<template #buttons>
-				<k-button-group>
-					<k-button
-						:link="model.previewUrl"
-						:title="$t('open')"
-						icon="open"
-						target="_blank"
-						variant="filled"
-						size="sm"
-						class="k-site-view-preview"
-					/>
-					<k-languages-dropdown />
-				</k-button-group>
+			<k-header
+				:editable="permissions.changeTitle && !isLocked"
+				class="k-site-view-header"
+				@edit="$dialog('site/changeTitle')"
+			>
+				{{ model.title }}
+				<template #buttons>
+					<k-button-group>
+						<k-button
+							:link="model.previewUrl"
+							:title="$t('open')"
+							icon="open"
+							target="_blank"
+							variant="filled"
+							size="sm"
+							class="k-site-view-preview"
+						/>
+						<k-languages-dropdown />
+					</k-button-group>
 
-				<k-form-buttons :lock="lock" />
-			</template>
-		</k-header>
+					<k-form-buttons :lock="lock" />
+				</template>
+			</k-header>
 
-		<k-model-tabs :tab="tab.name" :tabs="tabs" />
+			<k-model-tabs :tab="tab.name" :tabs="tabs" />
 
-		<k-sections
-			:blueprint="blueprint"
-			:empty="$t('site.blueprint')"
-			:lock="lock"
-			:tab="tab"
-			parent="site"
-			@submit="$emit('submit', $event)"
-		/>
-	</k-panel-inside>
+			<k-sections
+				:blueprint="blueprint"
+				:empty="$t('site.blueprint')"
+				:lock="lock"
+				:tab="tab"
+				parent="site"
+				@submit="$emit('submit', $event)"
+			/>
+		</k-panel-inside>
+	</div>
 </template>
 
 <script>
