@@ -2,6 +2,8 @@
 	<k-panel
 		class="k-preview-view"
 		:style="{
+			'--preview-window-breakpoint-sm': $panel.config.preview.breakpoints?.sm,
+			'--preview-window-breakpoint-md': $panel.config.preview.breakpoints?.md,
 			'--preview-window-width': 'var(--preview-window-width-' + size + ')'
 		}"
 	>
@@ -167,9 +169,18 @@ export default {
 
 <style>
 .k-preview-view {
-	--preview-window-width-sm: calc(420px + var(--spacing-12) * 2) 1fr;
-	--preview-window-width-md: calc(768px + var(--spacing-12) * 2) 1fr;
-	--preview-window-width-lg: 1fr 30rem;
+	--preview-window-breakpoint-sm: 420px;
+	--preview-window-breakpoint-md: 748px;
+
+	--preview-window-width-sm: calc(
+			var(--preview-window-breakpoint-sm) + var(--spacing-12) * 2
+		)
+		1fr;
+	--preview-window-width-md: calc(
+			var(--preview-window-breakpoint-md) + var(--spacing-12) * 2
+		)
+		1fr;
+	--preview-window-width-lg: 1fr max(30rem, 30vw);
 
 	display: grid;
 	grid-template-areas:
