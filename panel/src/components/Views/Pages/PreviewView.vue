@@ -9,7 +9,12 @@
 			<k-button-group>
 				<k-button :link="id" icon="angle-left" size="sm" variant="filled" />
 				<h1>
-					<k-button :dropdown="true" icon="title" @click="$refs.tree.toggle()">
+					<k-button
+						:dropdown="true"
+						:title="model.id"
+						icon="title"
+						@click="$refs.tree.toggle()"
+					>
 						{{ model.title }}
 					</k-button>
 				</h1>
@@ -85,16 +90,7 @@
 			/>
 		</main>
 
-		<!-- Notifications -->
-		<k-button
-			v-if="notification && notification.type !== 'error'"
-			:icon="notification.icon"
-			:text="notification.message"
-			:theme="notification.theme"
-			variant="filled"
-			class="k-panel-notification"
-			@click="notification.close()"
-		/>
+		<k-panel-notifications />
 	</k-panel>
 </template>
 
@@ -110,16 +106,6 @@ export default {
 		};
 	},
 	computed: {
-		notification() {
-			if (
-				this.$panel.notification.context === "view" &&
-				!this.$panel.notification.isFatal
-			) {
-				return this.$panel.notification;
-			}
-
-			return null;
-		},
 		timestamp() {
 			return this.$view.timestamp;
 		}
