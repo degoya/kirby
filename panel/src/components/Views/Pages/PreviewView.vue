@@ -149,15 +149,16 @@ export default {
 		this.$events.off("file.sort", this.reload);
 	},
 	methods: {
-		load(event) {
-			const location = event.target.contentDocument?.location;
+		load() {
+			const location = this.$refs.iframe.contentWindow.location;
 
-			if (!location) {
-				return;
-			}
-
-			if (location.href !== this.model.previewUrl) {
-				this.navigate(location.pathname);
+			try {
+				if (location.href !== this.model.previewUrl) {
+					this.navigate(location.pathname);
+				}
+			} catch (e) {
+				// reset the iframe if the location is not accessible
+				this.$refs.iframe.src = this.model.previewUrl;
 			}
 
 			this.isReloading = false;
