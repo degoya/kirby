@@ -30,11 +30,8 @@
 				</k-dropdown-content>
 			</k-button-group>
 			<k-toggles-input
-				:options="[
-					{ icon: 'mobile', value: 'sm' },
-					{ icon: 'tablet', value: 'md' },
-					{ icon: 'display', value: 'lg' }
-				]"
+				v-if="sizes.length > 1"
+				:options="sizes"
 				:value="size"
 				class="k-preview-sizes"
 				@input="size = $event"
@@ -109,15 +106,35 @@ export default {
 	data() {
 		return {
 			isReloading: false,
-			size: "lg"
+			size: null
 		};
 	},
 	computed: {
+		sizes() {
+			const sizes = [];
+			const breakpoints = this.$panel.config.preview.breakpoints;
+
+			if (breakpoints) {
+				if (breakpoints.sm !== false) {
+					sizes.push({ icon: "mobile", value: "sm" });
+				}
+				if (breakpoints.md !== false) {
+					sizes.push({ icon: "tablet", value: "md" });
+				}
+				if (breakpoints.lg !== false) {
+					sizes.push({ icon: "display", value: "lg" });
+				}
+			}
+
+			return sizes;
+		},
 		timestamp() {
 			return this.$view.timestamp;
 		}
 	},
 	created() {
+		this.size = this.sizes.slice(-1)[0]?.value ?? "lg";
+
 		this.$events.on("model.update", this.reload);
 		this.$events.on("page.changeTitle", this.reload);
 		this.$events.on("page.changeStatus", this.reload);
