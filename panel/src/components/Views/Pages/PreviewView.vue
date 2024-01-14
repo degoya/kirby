@@ -242,5 +242,6 @@ export default {
 	overflow: scroll;
 	padding: var(--spacing-12);
 	border-left: 1px solid var(--color-border);
+	container-type: inline-size;
 }
 </style>
