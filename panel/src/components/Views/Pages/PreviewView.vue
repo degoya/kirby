@@ -9,14 +9,13 @@
 			<k-button-group>
 				<k-button :link="id" icon="angle-left" size="sm" variant="filled" />
 				<h1>
-					<k-button
-						:dropdown="true"
-						icon="title"
-						@click="$dialog(id + '/changeTitle')"
-					>
+					<k-button :dropdown="true" icon="title" @click="$refs.tree.toggle()">
 						{{ model.title }}
 					</k-button>
 				</h1>
+				<k-dropdown-content ref="tree" theme="light" class="k-preview-tree">
+					<k-page-tree @click.native.stop @select="navigate" />
+				</k-dropdown-content>
 			</k-button-group>
 			<k-toggles-input
 				:options="[
@@ -159,6 +158,16 @@ export default {
 			}
 
 			this.isReloading = false;
+		},
+		navigate(page) {
+			this.$refs.tree.close();
+
+			if (page.id === "/") {
+				return this.$panel.view.open("site/preview");
+			}
+
+			const url = this.$api.pages.url(page.id, "preview");
+			this.$panel.view.open(url);
 		},
 		reload() {
 			if (this.isReloading === true) {
